@@ -1,4 +1,5 @@
 Attribute VB_Name = "modMain"
+
 '---------------------------------------------------------------------------------------
 ' Module    : modMain
 ' DateTime  : 2012-10-20 21:41
@@ -27,7 +28,7 @@ Public NewLogFile As Boolean
 Public Const PROGRAM_TITLE = "Y's Notepad SE Beta(V." '프로그램 기본 타이틀
 Public Const PROGRAM_NAME = "Y's Notepad SE" '프로그램 이름
 Public Const PROGRAM_KEY = "YNotepadSE" '프로그램 코드
-Public Const LAST_UPDATED = "2013-02-27" '마지막 업데이트 날짜
+Public Const LAST_UPDATED = "2013-02-27(1)" '마지막 업데이트 날짜
 Public Const LOGFILE = "log.dat" '로그 파일 이름
 Public DEBUG_VERSION As Boolean
 Public FindStartPos As Integer
@@ -150,6 +151,9 @@ Public Function EnCrypt(ByRef sString As String) As String '암호화
 End Function
 
 Public Function DeCrypt(ByRef sHexString As String) As String '복호화
+If Right(sHexString, 2) = vbCrLf Then
+sHexString = Left(sHexString, Len(sHexString) - 2)
+End If
     Dim sTemp As String, n As Long, nKey As Byte
     sTemp = StrReverse$(sHexString)
     nKey = CByte("&H" & Left$(sTemp, 2)) Xor &HBB
