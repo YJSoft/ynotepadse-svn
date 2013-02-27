@@ -155,6 +155,7 @@ If Right(sHexString, 2) = vbCrLf Then
 sHexString = Left(sHexString, Len(sHexString) - 2)
 End If
     Dim sTemp As String, n As Long, nKey As Byte
+    Dim sKey As String
     sTemp = StrReverse$(sHexString)
     nKey = CByte("&H" & Left$(sTemp, 2)) Xor &HBB
     sTemp = Mid$(sTemp, 3)

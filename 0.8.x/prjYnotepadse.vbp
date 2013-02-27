@@ -15,6 +15,7 @@ Form=Form2.frm
 Form=frmMain_eng.frm
 Module=modProcess; modProcess.bas
 Module=modKey; modKey.bas
+Module=Encryption1_1v; hashmaxcode.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile="I:\PROJECTS_VB\YNOTEPADSE\YNOTEPADSE.chm"
