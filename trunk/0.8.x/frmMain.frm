@@ -1,12 +1,12 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.ocx"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
    Caption         =   "frmMain"
    ClientHeight    =   6195
    ClientLeft      =   165
-   ClientTop       =   855
+   ClientTop       =   810
    ClientWidth     =   7875
    LinkTopic       =   "Form1"
    ScaleHeight     =   6195
