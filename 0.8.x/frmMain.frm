@@ -310,9 +310,11 @@ Begin VB.Form frmMain
       Caption         =   "도움말(&H)"
       Begin VB.Menu mnuHelpContents 
          Caption         =   "목차(&C)"
+         Enabled         =   0   'False
       End
       Begin VB.Menu mnuHelpSearch 
          Caption         =   "찾기(&S)..."
+         Enabled         =   0   'False
       End
       Begin VB.Menu mnuHelpBar1 
          Caption         =   "-"
@@ -753,21 +755,21 @@ frmSplash.Show '스플래시로 쓰던 폼 재활용 ㅋㅋ
 'frmSplash.Timer1.Enabled = False
 End Sub
 
-Private Sub mnuHelpContents_Click() '도움말<파일이 없어서 FAIL
+Private Sub mnuHelpContents_Click()
   On Error Resume Next
   
   Dim nRet As Integer
-  nRet = OSWinHelp(Me.hwnd, App.HelpFile, 3, 0)
+  nRet = OSWinHelp(Me.hwnd, AppPath & PROGRAM_HELPFILE, 3, 0)
  ' OSWinHelp
   If Err Then
     MsgBox Err.Description
   End If
 End Sub
-Private Sub mnuHelpSearch_Click() '도움말<파일이 없어서 FAIL
+Private Sub mnuHelpSearch_Click()
   On Error Resume Next
   
   Dim nRet As Integer
-  nRet = OSWinHelp(Me.hwnd, App.HelpFile, 261, 0)
+  nRet = OSWinHelp(Me.hwnd, AppPath & PROGRAM_HELPFILE, 261, 0)
   If Err Then
     MsgBox Err.Description
   End If
@@ -915,6 +917,9 @@ End If
 Dirty = False
 FileName_Dir = CD1.FileName
 UpdateFileName Me, FileName_Dir
+AddMRU FileName_Dir
+LoadMRUList
+UpdateMRU Me
 Newfile = False
 End Sub
 
@@ -942,6 +947,9 @@ End If
 Dirty = False
 FileName_Dir = CD1.FileName
 UpdateFileName Me, FileName_Dir
+AddMRU FileName_Dir
+LoadMRUList
+UpdateMRU Me
 Newfile = False
 End Sub
 
