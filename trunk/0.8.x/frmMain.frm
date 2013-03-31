@@ -6,7 +6,7 @@ Begin VB.Form frmMain
    Caption         =   "frmMain"
    ClientHeight    =   6195
    ClientLeft      =   165
-   ClientTop       =   810
+   ClientTop       =   855
    ClientWidth     =   7875
    LinkTopic       =   "Form1"
    ScaleHeight     =   6195
@@ -154,6 +154,10 @@ Begin VB.Form frmMain
       Begin VB.Menu mnuFileOpen 
          Caption         =   "열기(&O)"
          Shortcut        =   ^O
+      End
+      Begin VB.Menu utffileopen 
+         Caption         =   "UTF-8 파일 열기"
+         Shortcut        =   ^U
       End
       Begin VB.Menu mnuFileBar1 
          Caption         =   "-"
@@ -833,9 +837,11 @@ Mklog "파일 열기(" & CD1.FileName & ")" '로그 남김(디버그)
 FileName_Dir = CD1.FileName
 
 Dim FreeFileNum As Integer
+Dim StrTemp As Byte
 FreeFileNum = FreeFile
 Open FileName_Dir For Input As #FreeFileNum
 Screen.MousePointer = 11
+'StrTemp = InputB(LOF(FreeFileNum), FreeFileNum)
 txtText.Text = StrConv(InputB(LOF(FreeFileNum), FreeFileNum), vbUnicode)
 If Not Err.Number = 0 Then
     MsgBox "오류 발생!" & vbCrLf & "오류 번호:" & Err.Number & vbCrLf & Err.Description, vbCritical, "오류!"
@@ -1252,3 +1258,67 @@ Dirty = False
 frmMain.CD1.FileName = FileName_Dir
 End Sub
 
+Private Sub utffileopen_Click()
+On Error Resume Next
+'debug_temp = True
+    If MsgBox("UTF-8로 파일을 열었더라도 저장시엔 ANSI로 저장되니 " & _
+    "UTF-8로 저장하시려면 다른 편집기를 사용하여 주시기 바랍니다.(정식버전 지원 예정)", _
+    vbOKCancel + vbInformation, "UTF-8 열기(베타 기능)") = vbCancel Then Exit Sub
+If Dirty Then
+    If SaveCheck(CD1) = False Then Exit Sub '저장 확인에서 취소하였거나 오류 발생시 빠져나감
+End If
+Mklog "frmMain.mnuFileOpen_Click()"
+CD1.Filter = "텍스트 파일|*.txt|모든 파일|*.*" '파일 열기 대화상자 플래그 설정
+CD1.CancelError = True '취소시 오류(32755)
+CD1.ShowOpen '대화상자 표시
+If Err.Number = 32755 Then '취소가 눌려졌다!
+    CD1.FileName = "" '열려진 파일 초기화
+    Err.Clear
+    Mklog "사용자가 열기 취소"
+    Exit Sub '프로시저 실행 종료(사용자가 취소함)
+End If
+If Err.Number = 13 Then '형식이 맞지 않다!
+    CD1.FileName = "" '열려진 파일 초기화
+    Err.Clear
+    Mklog "나는 자연인이다!\"
+    Mklog "-운지천F 광고 중\"
+    Mklog "또 형식이 맞지 않단다!!!\"
+    Mklog "버그다 버그!!!\"
+    MsgBox "죄송합니다. 프로그램에서 잘못된 명령을 수행하여 작업이 중단됩니다...", vbCritical, "치명적인 오류"
+    Exit Sub '프로시저 실행 종료(사용자가 취소함)
+End If
+If Not Err.Number = 0 Then
+    MsgBox "오류 발생!" & vbCrLf & "오류 번호:" & Err.Number & vbCrLf & Err.Description, vbCritical, "오류!"
+    Mklog Err.Number & "/" & Err.Description
+    Err.Clear
+    Exit Sub
+End If
+Mklog "파일 열기(" & CD1.FileName & ")" '로그 남김(디버그)
+'RTF.FileName = CD1.FileName '파일 열기 처리
+FileName_Dir = CD1.FileName
+
+'Dim FreeFileNum As Integer
+'Dim StrTemp As Byte
+'FreeFileNum = FreeFile
+'Open FileName_Dir For Input As #FreeFileNum
+Screen.MousePointer = 11
+'StrTemp = InputB(LOF(FreeFileNum), FreeFileNum)
+txtText.Text = UTFOpen(FileName_Dir)
+If Not Err.Number = 0 Then
+    MsgBox "오류 발생!" & vbCrLf & "오류 번호:" & Err.Number & vbCrLf & Err.Description, vbCritical, "오류!"
+    Mklog Err.Number & "/" & Err.Description
+    Err.Clear
+    Screen.MousePointer = 0
+    Exit Sub
+End If
+
+Newfile = False
+UpdateFileName Me, FileName_Dir
+AddMRU FileName_Dir '최근 연 파일에 추가
+LoadMRUList
+UpdateMRU Me
+txtText.ForeColor = GetSetting(PROGRAM_KEY, "RTF", "FontColor", &H0&)
+Dirty = False
+'Close #FreeFileNum
+Screen.MousePointer = 0
+End Sub

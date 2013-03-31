@@ -40,3 +40,34 @@ Set oWMI = Nothing
 Set oLDK = Nothing
 
 End Function
+
+Public Function UTF8_Encode(ByRef sStr() As Byte) As String
+    
+    Dim ii As Long, sUTF8 As String, iChar As Long, iChar2 As Long
+    
+    For ii = 0 To UBound(sStr)
+        iChar = sStr(ii)
+        
+        If iChar > 127 Then
+            If Not iChar And 32 Then ' 2 chars
+                iChar2 = sStr(ii + 1)
+                sUTF8 = sUTF8 & ChrW$(((31 And iChar) * 64 + (63 And iChar2)))
+                ii = ii + 1
+            Else
+                Dim iChar3 As Integer
+                iChar2 = sStr(ii + 1)
+                iChar3 = sStr(ii + 2)
+                sUTF8 = sUTF8 & ChrW$(((iChar And 15) * 16 * 256) + ((iChar2 And 63) * 64) + (iChar3 And 63))
+                ii = ii + 2
+            End If
+        Else
+            sUTF8 = sUTF8 & Chr$(iChar)
+        End If
+    Next ii
+    
+    UTF8_Encode = sUTF8
+    
+End Function
+'[출처] VB에서 UTF-8로 문자열 인코딩(배열, 문자열)|작성자 와인
+
+
