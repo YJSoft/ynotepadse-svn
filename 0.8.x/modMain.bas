@@ -37,6 +37,7 @@ Public FindEndPos As Integer
 Public FindText As String
 Public ReplaceText As String
 Public Lang As Boolean
+Public UTF8_Error As Boolean
 'Public Const YJSoft = "YJSoft"
 
 '여기부터는 프로그램용 선언
