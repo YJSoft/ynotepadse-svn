@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
@@ -154,6 +154,10 @@ Begin VB.Form frmMain
       Begin VB.Menu mnuFileOpen 
          Caption         =   "열기(&O)"
          Shortcut        =   ^O
+      End
+      Begin VB.Menu utffileopen 
+         Caption         =   "UTF-8로 열기"
+         Shortcut        =   ^U
       End
       Begin VB.Menu mnuFileBar1 
          Caption         =   "-"
@@ -803,6 +807,7 @@ If Dirty Then
 End If
 Mklog "frmMain.mnuFileOpen_Click()"
 CD1.Filter = "텍스트 파일|*.txt|모든 파일|*.*" '파일 열기 대화상자 플래그 설정
+CD1.Flags = cdlOFNFileMustExist Or cdlOFNHideReadOnly Or cdlOFNLongNames
 CD1.CancelError = True '취소시 오류(32755)
 CD1.ShowOpen '대화상자 표시
 If Err.Number = 32755 Then '취소가 눌려졌다!
@@ -816,10 +821,6 @@ End If
 If Err.Number = 13 Then '형식이 맞지 않다!
     CD1.FileName = "" '열려진 파일 초기화
     Err.Clear
-    Mklog "나는 자연인이다!\"
-    Mklog "-운지천F 광고 중\"
-    Mklog "또 형식이 맞지 않단다!!!\"
-    Mklog "버그다 버그!!!\"
     MsgBox "죄송합니다. 프로그램에서 잘못된 명령을 수행하여 작업이 중단됩니다...", vbCritical, "치명적인 오류"
     Exit Sub '프로시저 실행 종료(사용자가 취소함)
 End If
@@ -841,23 +842,24 @@ FileName_Dir = CD1.FileName
 'txtText.Text = StrConv(InputB(LOF(FreeFileNum), FreeFileNum), vbUnicode)
 Dim utf8_() As Byte
 Screen.MousePointer = 11
-Open FileName_Dir For Binary As #1   'UTF-8 문서지정
-ReDim utf8_(LOF(1))
-Get #1, , utf8_
-If Hex(utf8_(0)) & Hex(utf8_(1)) & Hex(utf8_(2)) = "EFBBBF" Then 'UTF-8 문서인가?
-    Close #1
-        If MsgBox("UTF-8로 파일을 열었더라도 저장시엔 ANSI로 저장되니 " & _
-    "UTF-8로 저장하시려면 다른 편집기를 사용하여 주시기 바랍니다.(정식버전 지원 예정)", _
-    vbOKCancel + vbInformation, "UTF-8 열기(베타 기능)") = vbCancel Then GoTo Cancel_Open
-    txtText.Text = UTFOpen(FileName_Dir)
-Else
-    Close #1
+'Open FileName_Dir For Binary As #1   'UTF-8 문서지정
+'ReDim utf8_(LOF(1))
+'Get #1, , utf8_
+'Debug.Print "Hex(utf8_(0)) & Hex(utf8_(1)) & Hex(utf8_(2)) = " & Hex(utf8_(0)) & Hex(utf8_(1)) & Hex(utf8_(2))
+'If Hex(utf8_(0)) & Hex(utf8_(1)) & Hex(utf8_(2)) = "EFBBBF" Then 'UTF-8 문서인가?
+'    Close #1
+'        If MsgBox("UTF-8로 파일을 열었더라도 저장시엔 ANSI로 저장되니 " & _
+'    "UTF-8로 저장하시려면 다른 편집기를 사용하여 주시기 바랍니다.(정식버전 지원 예정)", _
+'    vbOKCancel + vbInformation, "UTF-8 열기(베타 기능)") = vbCancel Then GoTo Cancel_Open
+'    txtText.Text = UTFOpen(FileName_Dir)
+'Else
+'    Close #1
     Dim FreeFileNum As Integer
     FreeFileNum = FreeFile
     Open FileName_Dir For Input As #FreeFileNum
     Screen.MousePointer = 11
     txtText.Text = StrConv(InputB(LOF(FreeFileNum), FreeFileNum), vbUnicode)
-End If
+'End If
 If Not Err.Number = 0 Then
     MsgBox "오류 발생!" & vbCrLf & "오류 번호:" & Err.Number & vbCrLf & Err.Description, vbCritical, "오류!"
     Mklog Err.Number & "/" & Err.Description
@@ -976,6 +978,7 @@ End Sub
 
 Private Sub SaveFile()
 CD1.Filter = "텍스트 파일|*.txt|모든 파일|*.*" '파일 열기 대화상자 플래그 설정
+CD1.Flags = cdlOFNCreatePrompt Or cdlOFNOverwritePrompt
 CD1.CancelError = True '취소시 오류(32755)
 CD1.ShowSave '대화상자 표시
 If Not Right(CD1.FileName, 4) = ".txt" Then
@@ -1294,6 +1297,7 @@ If Dirty Then
 End If
 Mklog "frmMain.mnuFileOpen_Click()"
 CD1.Filter = "텍스트 파일|*.txt|모든 파일|*.*" '파일 열기 대화상자 플래그 설정
+CD1.Flags = cdlOFNFileMustExist Or cdlOFNHideReadOnly Or cdlOFNLongNames
 CD1.CancelError = True '취소시 오류(32755)
 CD1.ShowOpen '대화상자 표시
 If Err.Number = 32755 Then '취소가 눌려졌다!
@@ -1305,10 +1309,6 @@ End If
 If Err.Number = 13 Then '형식이 맞지 않다!
     CD1.FileName = "" '열려진 파일 초기화
     Err.Clear
-    Mklog "나는 자연인이다!\"
-    Mklog "-운지천F 광고 중\"
-    Mklog "또 형식이 맞지 않단다!!!\"
-    Mklog "버그다 버그!!!\"
     MsgBox "죄송합니다. 프로그램에서 잘못된 명령을 수행하여 작업이 중단됩니다...", vbCritical, "치명적인 오류"
     Exit Sub '프로시저 실행 종료(사용자가 취소함)
 End If
