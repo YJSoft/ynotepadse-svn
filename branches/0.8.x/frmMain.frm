@@ -608,12 +608,21 @@ Err.Clear
 End Sub
 
 Private Sub mnuDecrypt_Click() '해독
+If txtText.Text = "" Then
+MsgBox "빈 문자열은 복호화할 수 없습니다.", vbInformation, "복호화할 문자열 없음"
+Exit Sub
+End If
 Dim msgres As VbMsgBoxResult
 msgres = MsgBox("이 기능은 아직 충분히 테스트되지 않았으며, 파일이 손상될 수도 있습니다." & vbCrLf & "암호화를 하기 전에 파일을 백업해 두십시요." & vbCrLf & "정말 계속하시겠습니까?", vbQuestion + vbOKCancel, "베타!")
 If msgres = vbCancel Then Exit Sub
 Dim EncStr As String
 Dim EFunc As New SuperEncrypt
+gonouse:
 EncStr = InputBox("암호화에 썼던 문자열을 입력해 주세요." & vbCrLf & "키 값을 잊어 버리셨다면 절대 복호화 하실 수 없습니다!", "암호화 문자열")
+If EncStr = "" Then
+MsgBox "빈 칸으로 복호화 하실 수 없습니다!", vbCritical, "오류"
+GoTo gonouse
+End If
 txtText.Text = EFunc.DecryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
 
@@ -636,12 +645,21 @@ keybd_event 17, 0, KEYEVENTF_KEYUP, 0
 End Sub
 
 Private Sub mnuEncrypt_Click() '암호화
+If txtText.Text = "" Then
+MsgBox "빈 문자열은 암호화할 수 없습니다.", vbInformation, "암호화할 문자열 없음"
+Exit Sub
+End If
 Dim msgres As VbMsgBoxResult
 msgres = MsgBox("이 기능은 아직 충분히 테스트되지 않았으며, 파일이 손상될 수도 있습니다." & vbCrLf & "암호화를 하기 전에 파일을 백업해 두십시요." & vbCrLf & "정말 계속하시겠습니까?", vbQuestion + vbOKCancel, "베타!")
 If msgres = vbCancel Then Exit Sub
 Dim EncStr As String
 Dim EFunc As New SuperEncrypt
-EncStr = InputBox("암호화에 쓸 문자열을 입력해 주세요." & vbCrLf & "잊어 버리면 절대 복호화 하실 수 없습니다!", "암호화 문자열")
+gonouse:
+EncStr = InputBox("암호화에 쓸 문자열을 입력해 주세요." & vbCrLf & "잊어 버리면 절대 복호화 하실 수 없습니다!", "암호화 문자열", "")
+If EncStr = "" Then
+MsgBox "빈 칸으로 암호화 하실 수 없습니다!", vbCritical, "오류"
+GoTo gonouse
+End If
 txtText.Text = EFunc.EncryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
 
