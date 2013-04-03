@@ -623,6 +623,9 @@ If EncStr = "" Then
 MsgBox "빈 칸으로 복호화 하실 수 없습니다!", vbCritical, "오류"
 GoTo gonouse
 End If
+If Right(txtText.Text, 2) = vbCrLf Then
+txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
+End If
 txtText.Text = EFunc.DecryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
 
@@ -891,7 +894,7 @@ If Not Err.Number = 0 Then
     Screen.MousePointer = 0
     Exit Sub
 End If
-txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
+'txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
 Newfile = False
 UpdateFileName Me, FileName_Dir
 AddMRU FileName_Dir '최근 연 파일에 추가
@@ -937,15 +940,16 @@ End Sub
 
 
 Private Sub mnuFileSave_Click()
-On Error Resume Next
+'On Error Resume Next
 If Not Dirty Then Exit Sub '텍스트에 변화가 없으면 빠져나감
 'RTF.Text = txtText.Text
 Mklog "frmMain.mnuFileSave_Click()"
 If Newfile Then
-    SaveFile
+    If Not SaveFile Then Exit Sub
 Else
 'CD1.FileName = RTF.FileName '이미 열려진 파일이 있다-열려진 파일 이름을 cd1.filename에 대입
 End If
+Close '열려있는 모든 핸들을 닫는다.
 Mklog "파일 저장(" & CD1.FileName & ")" '로그 남김(디버그)
     Dim FreeFileNum As Integer
     FreeFileNum = FreeFile
@@ -975,8 +979,9 @@ Private Sub mnuFileSaveAs_Click()
 On Error Resume Next
 'RTF.Text = txtText.Text
 Mklog "frmMain.mnuFileSaveAs_Click()"
-SaveFile
+If Not SaveFile Then Exit Sub
 Mklog "파일 저장(" & CD1.FileName & ")" '로그 남김(디버그)
+Close '열려있는 모든 핸들을 닫는다.
     Dim FreeFileNum As Integer
     FreeFileNum = FreeFile
     Screen.MousePointer = 11
@@ -1000,7 +1005,8 @@ UpdateMRU Me
 Newfile = False
 End Sub
 
-Private Sub SaveFile()
+Private Function SaveFile() As Boolean
+On Error Resume Next
 CD1.Filter = "텍스트 파일|*.txt|모든 파일|*.*" '파일 열기 대화상자 플래그 설정
 CD1.Flags = cdlOFNCreatePrompt Or cdlOFNOverwritePrompt
 CD1.CancelError = True '취소시 오류(32755)
@@ -1011,8 +1017,9 @@ End If
 If Err.Number = 32755 Then '취소가 눌려졌다!
     CD1.FileName = "" '열려진 파일 초기화
     Err.Clear
-    Mklog "사용자가 열기 취소"
-    Exit Sub '프로시저 실행 종료(사용자가 취소함)
+    Mklog "사용자가 저장 취소"
+    SaveFile = False
+    Exit Function '프로시저 실행 종료(사용자가 취소함)
 End If
 If Err.Number = 13 Then '형식이 맞지 않다!
     CD1.FileName = "" '열려진 파일 초기화
@@ -1022,15 +1029,18 @@ If Err.Number = 13 Then '형식이 맞지 않다!
     Mklog "또 형식이 맞지 않단다!!!\"
     Mklog "버그다 버그!!!\"
     MsgBox "죄송합니다. 프로그램에서 잘못된 명령을 수행하여 작업이 중단됩니다...", vbCritical, "치명적인 오류"
-    Exit Sub '프로시저 실행 종료(사용자가 취소함)
+    SaveFile = False
+    Exit Function '프로시저 실행 종료(사용자가 취소함)
 End If
 If Not Err.Number = 0 Then
     MsgBox "오류 발생!" & vbCrLf & "오류 번호:" & Err.Number & vbCrLf & Err.Description, vbCritical, "오류!"
     Mklog Err.Number & "/" & Err.Description
     Err.Clear
-    Exit Sub
+    SaveFile = False
+    Exit Function
 End If
-End Sub
+SaveFile = True
+End Function
 Private Sub mnuLogClr_Click()
 'Me.logsave.Text = ""
 '로그 만드는 함수에 통합
@@ -1086,9 +1096,10 @@ If Not Err.Number = 0 Then
     Screen.MousePointer = 0
     Exit Sub
 End If
-txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
+'txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
 Newfile = False
 UpdateFileName Me, strFile
+CD1.FileName = strFile
 AddMRU strFile '최근 연 파일에 추가
 txtText.ForeColor = GetSetting(PROGRAM_KEY, "RTF", "FontColor", &H0&)
 Dirty = False

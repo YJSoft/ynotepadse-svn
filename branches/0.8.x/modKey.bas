@@ -1,4 +1,10 @@
 Attribute VB_Name = "modKey"
+'---------------------------------------------------------------------------------------
+' Module    : modKey
+' DateTime  : 2013-04-03 13:36
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
 Option Explicit
 Public Declare Sub keybd_event Lib "user32" (ByVal bVk As Byte, ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As Long)
 Public Const KEYEVENTF_EXTENDEDKEY = &H1

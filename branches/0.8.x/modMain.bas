@@ -48,15 +48,40 @@ Public Declare Sub Sleep Lib "kernel32.dll" (ByVal deMiliseconds As Long)
 Private Declare Sub RtlMoveMemory Lib "kernel32.dll" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
 Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 Public FindReplace As Boolean
+'---------------------------------------------------------------------------------------
+' Procedure : LoadMRUList
+' DateTime  : 2013-04-03 13:36
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub LoadMRUList()
 Dim i As Integer
+   On Error GoTo LoadMRUList_Error
+
 For i = 1 To 5
     MRUStr(i) = GetSetting(PROGRAM_KEY, "MRU", CStr(i), "")
 Next i
+
+   On Error GoTo 0
+   Exit Sub
+
+LoadMRUList_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure LoadMRUList of Module modMain"
 End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : ChkMRU
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub ChkMRU()
 Dim i As Integer
 Dim j As Integer
+   On Error GoTo ChkMRU_Error
+
 LoadMRUList
 For i = 1 To 5
     If MRUStr(i) = "" Then
@@ -77,9 +102,25 @@ For i = 1 To 5
     End If
 Next
 SaveSetting PROGRAM_KEY, "MRU", "Index", 5
+
+   On Error GoTo 0
+   Exit Sub
+
+ChkMRU_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure ChkMRU of Module modMain"
 End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : UpdateMRU
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub UpdateMRU(frmdta As Form)
 Dim i As Integer
+   On Error GoTo UpdateMRU_Error
+
 For i = 1 To 5
 If MRUStr(i) = "" Then
     frmdta.mnuMRU(i).Enabled = False
@@ -89,11 +130,27 @@ frmdta.mnuMRU(i).Caption = MRUStr(i)
 frmdta.mnuMRU(i).Enabled = True
 End If
 Next
+
+   On Error GoTo 0
+   Exit Sub
+
+UpdateMRU_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure UpdateMRU of Module modMain"
 End Sub
 
+'---------------------------------------------------------------------------------------
+' Procedure : AddMRU
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub AddMRU(MRUSting As String)
 Dim intindex As Integer
 Dim i As Integer
+   On Error GoTo AddMRU_Error
+
 For i = 1 To 5
     If MRUSting = MRUStr(i) Then Exit Sub '중복 파일은 기록하지 않는다
 Next i
@@ -121,8 +178,24 @@ SaveSetting PROGRAM_KEY, "MRU", "3", MRUStr(4)
 SaveSetting PROGRAM_KEY, "MRU", "4", MRUStr(5)
 SaveSetting PROGRAM_KEY, "MRU", "5", MRUSting
 End Select
+
+   On Error GoTo 0
+   Exit Sub
+
+AddMRU_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure AddMRU of Module modMain"
 End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : ClearMRU
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub ClearMRU()
+   On Error GoTo ClearMRU_Error
+
 SaveSetting PROGRAM_KEY, "MRU", "Index", 0
 SaveSetting PROGRAM_KEY, "MRU", "1", ""
 
@@ -133,6 +206,13 @@ SaveSetting PROGRAM_KEY, "MRU", "3", ""
 SaveSetting PROGRAM_KEY, "MRU", "4", ""
 
 SaveSetting PROGRAM_KEY, "MRU", "5", ""
+
+   On Error GoTo 0
+   Exit Sub
+
+ClearMRU_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure ClearMRU of Module modMain"
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -144,15 +224,33 @@ End Sub
 '
 Public Function EnCrypt(ByRef sString As String) As String '암호화
     Dim n As Long, nKey As Byte
+   On Error GoTo EnCrypt_Error
+
     Randomize
     nKey = Int(Rnd * 256)
     For n = 1 To Len(sString)
         EnCrypt = EnCrypt & Right$("0000" & Hex$(Oct(IntToLong(AscW(Mid$(sString, n, 1))) Xor (nKey Xor &H1234 Xor n))), 5)
     Next
     EnCrypt = StrReverse$(Right$("0" & Hex$(nKey Xor &HBB), 2) & EnCrypt)
+
+   On Error GoTo 0
+   Exit Function
+
+EnCrypt_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure EnCrypt of Module modMain"
 End Function
 
+'---------------------------------------------------------------------------------------
+' Procedure : DeCrypt
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Function DeCrypt(ByRef sHexString As String) As String '복호화
+   On Error GoTo DeCrypt_Error
+
 If Right(sHexString, 2) = vbCrLf Then
 sHexString = Left(sHexString, Len(sHexString) - 2)
 End If
@@ -165,19 +263,67 @@ End If
     For n = 1 To Len(sTemp) Step 5
         DeCrypt = DeCrypt & ChrW$(LongToInt(CLng("&O" & CLng("&H" & Mid$(sTemp, n, 5))) Xor (nKey Xor &H1234 Xor ((n + 4) \ 5))))
     Next
+
+   On Error GoTo 0
+   Exit Function
+
+DeCrypt_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure DeCrypt of Module modMain"
 End Function
 
+'---------------------------------------------------------------------------------------
+' Procedure : IntToLong
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Private Function IntToLong(ByVal IntNum As Integer) As Long
+   On Error GoTo IntToLong_Error
+
     RtlMoveMemory IntToLong, IntNum, 2
+
+   On Error GoTo 0
+   Exit Function
+
+IntToLong_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure IntToLong of Module modMain"
 End Function
 
+'---------------------------------------------------------------------------------------
+' Procedure : LongToInt
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Private Function LongToInt(ByVal LongNum As Long) As Integer
+   On Error GoTo LongToInt_Error
+
     RtlMoveMemory LongToInt, LongNum, 2
+
+   On Error GoTo 0
+   Exit Function
+
+LongToInt_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure LongToInt of Module modMain"
 End Function
 
+'---------------------------------------------------------------------------------------
+' Procedure : FindWon
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Function FindWon(findstr As String) As Integer '문장 내에서 \의 위치를 찾아내어 그 다음 위치를 반환하는 함수입니다. \가 없다면 0이 반환됩니다.
 Dim i As Integer
 Dim tempstr As String * 1
+   On Error GoTo FindWon_Error
+
 If findstr = "제목 없음" And Newfile = True Then
     FindWon = 0
     Exit Function
@@ -193,6 +339,13 @@ For i = Len(findstr) To 1 Step -1
 Next
 'Mklog "modMain.FindWon - 문장 안에 " & Chr(34) & "\" & Chr(34) & "가 없음."
 FindWon = 0
+
+   On Error GoTo 0
+   Exit Function
+
+FindWon_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure FindWon of Module modMain"
 End Function
 
 '####################################################################
@@ -207,8 +360,17 @@ End Function
 '########################사용하는 외부 함수##########################
 '###########################1)FindWon################################
 '####################################################################
+'---------------------------------------------------------------------------------------
+' Procedure : UpdateFileName
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub UpdateFileName(Form As Form, FileName As String)
 Dim i As Integer
+   On Error GoTo UpdateFileName_Error
+
 Select Case TitleMode
 Case 1 '파일 이름과 경로가 맨 뒤에
     'If FileName = "" Then
@@ -266,35 +428,25 @@ Case 5 '파일 이름만-베타!
         End If
     'End If
 End Select
+
+   On Error GoTo 0
+   Exit Sub
+
+UpdateFileName_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure UpdateFileName of Module modMain"
 End Sub
-Public Sub 비밀이랑께(나랑께 As Form)
-'Mklog Left(나랑께.RTF.Text, 11) & 1
-'Mklog Mid(나랑께.RTF.Text, 13, 1) & 2
-'On Error Resume Next
-'Mklog Mid(나랑께.RTF.Text, 14, Len(나랑께.RTF.Text) - 13) & 3
-If Left(나랑께.txtText.Text, 11) = "이거 누가 만든 거임" Then
-    If Mid(나랑께.txtText.Text, 13, 1) = Chr(34) Then
-        'Debug.Print Mid(나랑께.RTF.Text, Len(나랑께.RTF.Text), 1)
-        If Mid(나랑께.txtText.Text, Len(나랑께.txtText.Text), 1) = Chr(34) Then
-            Dim aaaaa_OS2 As String
-            If Len(나랑께.txtText.Text) - 14 = 0 Then GoTo A11
-            aaaaa_OS2 = Mid(나랑께.txtText.Text, 14, Len(나랑께.txtText.Text) - 14)
-            이거_누가_만든_거임 aaaaa_OS2
-        Else
-            Dim i As Integer
-                For i = 1 To 10
-A11:                '잘못 썼다!
-                    MsgBox "나랑께 빨리 문좀열어보랑께 " & i & "/10", vbCritical, "호성성님"
-                Next
-            End
-        End If
-    Else
-    이거_누가_만든_거임
-    End If
-End If
-End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : FileCheck
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Function FileCheck(ChkFile As String) As Boolean
 Dim a
+   On Error GoTo FileCheck_Error
+
 On Error GoTo n
 a = FileLen(ChkFile)
 If a > 1000000 Then '로그 파일 용량이 너무 크다!
@@ -305,6 +457,13 @@ Exit Function
 n:
 FileCheck = False
 Err.Clear
+
+   On Error GoTo 0
+   Exit Function
+
+FileCheck_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure FileCheck of Module modMain"
 End Function
 '#######################################################################
 '###############################Sub Main()##############################
@@ -405,13 +564,18 @@ frmMain.Show
 Dirty = False
 
 End Sub
-Public Sub 이거_누가_만든_거임(Optional 그냥그냥 As String = "<<피실험자 이름>>")
-MsgBox "yyj9411@naver.com이 만든거다! " & 그냥그냥 & "아~", vbInformation + vbYesNo
 
-End Sub
-'사용자 이름을 구하는 함수입니다.
 
+'---------------------------------------------------------------------------------------
+' Procedure : GetUserName
+' DateTime  : 2013-04-03 13:37
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub GetUserName()
+   On Error GoTo GetUserName_Error
+
 Username = GetSetting(PROGRAM_KEY, "Program", "User", "")
 If Username = "" Then '사용자 이름을 등록할까?
     If MsgBox("등록된 사용자 이름이 없습니다! 등록하시겠습니까?", vbYesNo, "사용자 등록") = vbYes Then
@@ -424,9 +588,25 @@ If Username = "" Then '사용자 이름을 등록할까?
     End If
 SaveSetting PROGRAM_KEY, "Program", "User", Username
 End If
+
+   On Error GoTo 0
+   Exit Sub
+
+GetUserName_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure GetUserName of Module modMain"
 End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : Mklog
+' DateTime  : 2013-04-03 13:38
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Sub Mklog(LogStr As String)
 Dim FreeFileNum As Integer
+   On Error GoTo Mklog_Error
+
 If NewLogFile Then
     FreeFileNum = FreeFile
     Open AppPath & "\" & LOGFILE For Output As #FreeFileNum
@@ -457,13 +637,36 @@ Else '없으면 시간 출력
     End If
 End If
 Close #FreeFileNum
+
+   On Error GoTo 0
+   Exit Sub
+
+Mklog_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure Mklog of Module modMain"
 End Sub
+'---------------------------------------------------------------------------------------
+' Procedure : AppPath
+' DateTime  : 2013-04-03 13:38
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Function AppPath() As String
+   On Error GoTo AppPath_Error
+
 If Right(App.Path, 1) = "\" Then
     AppPath = Left(App.Path, Len(App.Path) - 1)
 Else
     AppPath = App.Path
 End If
+
+   On Error GoTo 0
+   Exit Function
+
+AppPath_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure AppPath of Module modMain"
 End Function
 '#######################################################################
 '###########################SaveCheck 함수##############################

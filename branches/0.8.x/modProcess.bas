@@ -1,4 +1,10 @@
 Attribute VB_Name = "modProcess"
+'---------------------------------------------------------------------------------------
+' Module    : modProcess
+' DateTime  : 2013-04-03 13:36
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
 Public UpdateSite As String
 Private Declare Function CreateToolhelp32Snapshot Lib "kernel32" (ByVal lFlags As Long, ByVal lProcessID As Long) As Long
 Private Declare Function Process32First Lib "kernel32" (ByVal hSnapShot As Long, uProcess As PROCESSENTRY32) As Long
