@@ -28,7 +28,7 @@ Public NewLogFile As Boolean
 Public Const PROGRAM_TITLE = "Y's Notepad SE Beta(V." '프로그램 기본 타이틀
 Public Const PROGRAM_NAME = "Y's Notepad SE" '프로그램 이름
 Public Const PROGRAM_KEY = "YNotepadSE" '프로그램 코드
-Public Const LAST_UPDATED = "2013-04-03(3)" '마지막 업데이트 날짜
+Public Const LAST_UPDATED = "2013-04-03(4)" '마지막 업데이트 날짜
 Public Const LOGFILE = "log.dat" '로그 파일 이름
 Public Const PROGRAM_HELPFILE = "\YNOTEPADSE.chm"
 Public DEBUG_VERSION As Boolean
@@ -720,7 +720,6 @@ If Respond = vbYes Then '저장한다
     FreeFileNum = FreeFile
     Screen.MousePointer = 11
     Open Cd.FileName For Output As #FreeFileNum
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Print #FreeFileNum, frmMain.txtText.Text
     Close #FreeFileNum
     Screen.MousePointer = 0
@@ -733,6 +732,7 @@ If Respond = vbYes Then '저장한다
     End If
     Dirty = False
     SaveCheck = True
+    AddMRU Cd.FileName
 ElseIf Respond = vbNo Then
     SaveCheck = True
 Else
