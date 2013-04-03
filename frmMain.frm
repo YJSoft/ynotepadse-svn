@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.ocx"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
@@ -611,7 +611,13 @@ Private Sub mnuDecrypt_Click() '해독
 Dim msgres As VbMsgBoxResult
 msgres = MsgBox("이 기능은 아직 충분히 테스트되지 않았으며, 파일이 손상될 수도 있습니다." & vbCrLf & "암호화를 하기 전에 파일을 백업해 두십시요." & vbCrLf & "정말 계속하시겠습니까?", vbQuestion + vbOKCancel, "베타!")
 If msgres = vbCancel Then Exit Sub
-txtText.Text = DeCrypt(txtText.Text)
+Dim EncStr As String
+Dim EFunc As New SuperEncrypt
+If Right(txtText.Text, 2) = vbCrLf Then
+txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
+End If
+EncStr = InputBox("암호화에 썼던 문자열을 입력해 주세요." & vbCrLf & "키 값을 잊어 버리셨다면 절대 복호화 하실 수 없습니다!", "암호화 문자열")
+txtText.Text = EFunc.DecryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
 
 Private Sub mnuEditCopy_Click()
@@ -636,7 +642,10 @@ Private Sub mnuEncrypt_Click() '암호화
 Dim msgres As VbMsgBoxResult
 msgres = MsgBox("이 기능은 아직 충분히 테스트되지 않았으며, 파일이 손상될 수도 있습니다." & vbCrLf & "암호화를 하기 전에 파일을 백업해 두십시요." & vbCrLf & "정말 계속하시겠습니까?", vbQuestion + vbOKCancel, "베타!")
 If msgres = vbCancel Then Exit Sub
-txtText.Text = EnCrypt(txtText.Text)
+Dim EncStr As String
+Dim EFunc As New SuperEncrypt
+EncStr = InputBox("암호화에 쓸 문자열을 입력해 주세요." & vbCrLf & "잊어 버리면 절대 복호화 하실 수 없습니다!", "암호화 문자열")
+txtText.Text = EFunc.EncryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
 
 Private Sub mnuFastPrint_Click() '빠른 인쇄-빨리 뽑는다는게 아니라 기본 프린터로 그냥 뽑아버림.
