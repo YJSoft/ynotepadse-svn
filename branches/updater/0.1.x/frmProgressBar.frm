@@ -24,7 +24,6 @@ Begin VB.Form frmProgressBar
       _ExtentX        =   9763
       _ExtentY        =   4260
       _Version        =   393217
-      Enabled         =   -1  'True
       ScrollBars      =   2
       TextRTF         =   $"frmProgressBar.frx":6852
    End
@@ -38,6 +37,7 @@ Begin VB.Form frmProgressBar
       _ExtentX        =   450
       _ExtentY        =   450
       _Version        =   393217
+      Enabled         =   -1  'True
       TextRTF         =   $"frmProgressBar.frx":68EF
    End
    Begin VB.TextBox txtLocal 
@@ -397,7 +397,8 @@ Private Sub Form_Load()
     txtLocal.Text = AppPath & "\UDVersion.txt"
     Command1_Click
     Me.RichTextBox1.FileName = AppPath & "\UDVersion.txt"
-    If Not Me.RichTextBox1.Text = "2012-12-13(3)" Then '버전이 다르다(업데이트 필요)
+    If Not Me.RichTextBox1.Text = "2013-04-03" Then '버전이 다르다(업데이트 필요)
+        MsgBox "새로운 버전이 있습니다. 새 버전을 받아 옵니다...", vbInformation, "업데이트 확인됨"
         txtURL.Text = UpdateSite & "UPDATER_" & Me.RichTextBox1.Text & ".exe"
         txtLocal.Text = AppPath & "\UPDATER_" & Me.RichTextBox1.Text & ".exe"
         Command1_Click
@@ -494,3 +495,4 @@ End Sub
 Private Sub RichTextBox2_Change()
 
 End Sub
+
