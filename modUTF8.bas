@@ -1,4 +1,10 @@
 Attribute VB_Name = "modUTF8"
+'---------------------------------------------------------------------------------------
+' Module    : modUTF8
+' DateTime  : 2013-04-03 13:36
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
 Public Const CP_UTF8 = 65001
  
 Public Declare Function MultiByteToWideChar Lib "kernel32" _

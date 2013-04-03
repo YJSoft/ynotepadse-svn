@@ -41,10 +41,19 @@ Set oLDK = Nothing
 
 End Function
 
+'---------------------------------------------------------------------------------------
+' Procedure : UTF8_Encode
+' DateTime  : 2013-04-03 13:35
+' Author    : Administrator
+' Purpose   :
+'---------------------------------------------------------------------------------------
+'
 Public Function UTF8_Encode(ByRef sStr() As Byte) As String
     
     Dim ii As Long, sUTF8 As String, iChar As Long, iChar2 As Long
     
+   On Error GoTo UTF8_Encode_Error
+
     For ii = 0 To UBound(sStr)
         iChar = sStr(ii)
         
@@ -66,8 +75,14 @@ Public Function UTF8_Encode(ByRef sStr() As Byte) As String
     Next ii
     
     UTF8_Encode = sUTF8
+
+   On Error GoTo 0
+   Exit Function
+
+UTF8_Encode_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure UTF8_Encode of Module modETC"
     
 End Function
 '[출처] VB에서 UTF-8로 문자열 인코딩(배열, 문자열)|작성자 와인
-
 
