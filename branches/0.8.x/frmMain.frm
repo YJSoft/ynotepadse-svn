@@ -613,9 +613,6 @@ msgres = MsgBox("이 기능은 아직 충분히 테스트되지 않았으며, 파일이 손상될 수도 �
 If msgres = vbCancel Then Exit Sub
 Dim EncStr As String
 Dim EFunc As New SuperEncrypt
-If Right(txtText.Text, 2) = vbCrLf Then
-txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
-End If
 EncStr = InputBox("암호화에 썼던 문자열을 입력해 주세요." & vbCrLf & "키 값을 잊어 버리셨다면 절대 복호화 하실 수 없습니다!", "암호화 문자열")
 txtText.Text = EFunc.DecryptString(txtText.Text, EFunc.KeyFromString(EncStr))
 End Sub
@@ -876,7 +873,7 @@ If Not Err.Number = 0 Then
     Screen.MousePointer = 0
     Exit Sub
 End If
-
+txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
 Newfile = False
 UpdateFileName Me, FileName_Dir
 AddMRU FileName_Dir '최근 연 파일에 추가
