@@ -1068,7 +1068,7 @@ If Not Err.Number = 0 Then
     Screen.MousePointer = 0
     Exit Sub
 End If
-
+txtText.Text = Left(txtText.Text, Len(txtText.Text) - 2)
 Newfile = False
 UpdateFileName Me, strFile
 AddMRU strFile '최근 연 파일에 추가
@@ -1346,9 +1346,6 @@ End If
 
 Newfile = False
 UpdateFileName Me, FileName_Dir
-AddMRU FileName_Dir '최근 연 파일에 추가
-LoadMRUList
-UpdateMRU Me
 txtText.ForeColor = GetSetting(PROGRAM_KEY, "RTF", "FontColor", &H0&)
 Dirty = False
 'Close #FreeFileNum
