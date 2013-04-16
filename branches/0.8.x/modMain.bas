@@ -31,7 +31,7 @@ Public Const PROGRAM_KEY = "YNotepadSE" '프로그램 코드
 Public Const LAST_UPDATED = "2013-04-03(4)" '마지막 업데이트 날짜
 Public Const LOGFILE = "log.dat" '로그 파일 이름
 Public Const PROGRAM_HELPFILE = "\YNOTEPADSE.chm"
-Public DEBUG_VERSION As Boolean
+Public Const DEBUG_VERSION = True
 Public FindStartPos As Integer
 Public FindEndPos As Integer
 Public FindText As String
@@ -39,7 +39,7 @@ Public ReplaceText As String
 Public Lang As Boolean
 Public UTF8_Error As Boolean
 'Public Const YJSoft = "YJSoft"
-
+Public IsAboveNT As Boolean
 '여기부터는 프로그램용 선언
 Public Declare Function ShellAbout Lib "shell32.dll" Alias "ShellAboutA" (ByVal hwnd As Long, ByVal szApp As String, ByVal szOtherStuff As String, ByVal hIcon As Long) As Long '정보 대화 상자의 선언
 Public Declare Function SetFocus Lib "user32.dll" (ByVal hwnd As Long) As Long
@@ -470,23 +470,19 @@ End Function
 '###################제작:유영재(yyj9411@naver.com)######################
 '#######################################################################
 Sub Main()
-Dim temp As String * 4
+'Dim temp As String * 4
+'MRU 불러옴
 ChkMRU
-ChkMRU
-ChkMRU
-ChkMRU
-ChkMRU
-temp = GetSetting(PROGRAM_KEY, "Install", "Language", Korean_1)
-If temp = "English" Then Lang = True '영문 실행 모드(베타!)
+IsAboveNT = False
+Mklog "O/S 정보" & vbCrLf & fGetWindowVersion
+Mklog "투명화 지원 여부 - " & IsAboveNT
+'temp = GetSetting(PROGRAM_KEY, "Install", "Language", Korean_1)
+'If temp = "English" Then Lang = True '영문 실행 모드(베타!)
 If Val(GetSetting(PROGRAM_KEY, "Program", "Notepad", 0)) Then
     Shell "C:\Windows\notepad.exe " & Command(), vbNormalFocus
     End
 End If
-If Command() = "/nodebug" Then
-    DEBUG_VERSION = False
-Else
-    DEBUG_VERSION = True
-End If
+'DEBUG_VERSION = True
 On Error GoTo Err_Main
 If Not FileCheck(AppPath & "\" & LOGFILE) Then
     NewLogFile = True
