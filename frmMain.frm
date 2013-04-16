@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
@@ -487,7 +487,7 @@ Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
 If UnloadMode = vbAppWindows Then 'Windows가 종료 요청을 하였다
     If Dirty Then '파일 변경이 있다
         Dim ans As VbMsgBoxResult
-        ans = MsgBox("파일이 저장되지 않았습니다!" & vbCrLf & "정말 Windows를 종료하시겠습니까?", vbOKCancel, "종료 확인")
+        ans = MsgBox("파일이 저장되지 않았습니다!" & vbCrLf & "정말 Windows를 종료하시겠습니까?", vbOKCancel + vbQuestion, "종료 확인")
         If ans = vbCancel Then
             Cancel = True 'Windows 종료 보류
         End If
@@ -806,7 +806,8 @@ Private Sub mnuHelpSearch_Click()
   End If
 End Sub
 Private Sub mnuEditCut_Click()
-If txtText.SelLength = 0 Then Exit Sub '선택 부분이 없으면 잘라 내지 않는다
+'선택 부분이 없으면 잘라 내지 않는다(미선택시 클립보드가 비워지는 것을 방지)
+If txtText.SelLength = 0 Then Exit Sub
 Clipboard.SetText frmMain.txtText.SelText
 frmMain.txtText.SelText = ""
 End Sub
@@ -1169,6 +1170,10 @@ End Sub
 
 Private Sub mnuTransparencyCtl_Click()
 On Error GoTo Err_Trans
+If Not IsAboveNT Then
+    MsgBox "투명화 기능은 Windows 2000 이상에서만 사용하실 수 있습니다!", vbCritical, "오류"
+    Exit Sub
+End If
 If Me.txtText.Text = "=StringTest()" Then
     With Me.txtText
     .Text = ""
