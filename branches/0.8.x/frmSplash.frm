@@ -25,7 +25,7 @@ Begin VB.Form frmSplash
       TabIndex        =   0
       Top             =   60
       Width           =   7080
-      Begin VB.Label lblLastUpdated 
+      Begin VB.Label lblWinVer 
          Alignment       =   1  '오른쪽 맞춤
          AutoSize        =   -1  'True
          BackStyle       =   0  '투명
@@ -42,18 +42,28 @@ Begin VB.Form frmSplash
          Height          =   285
          Left            =   6360
          TabIndex        =   9
-         Top             =   3000
+         Top             =   3240
          Width           =   510
       End
-      Begin VB.Label lblAbout1 
+      Begin VB.Label lblLastUpdated 
+         Alignment       =   1  '오른쪽 맞춤
+         AutoSize        =   -1  'True
          BackStyle       =   0  '투명
-         Caption         =   "아무 키나 눌러주세요!"
-         Height          =   195
-         Left            =   120
+         Caption         =   "버전"
+         BeginProperty Font 
+            Name            =   "굴림"
+            Size            =   12
+            Charset         =   129
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   285
+         Left            =   6360
          TabIndex        =   8
-         Top             =   3360
-         Visible         =   0   'False
-         Width           =   6855
+         Top             =   3000
+         Width           =   510
       End
       Begin VB.Label lblUser 
          Alignment       =   1  '오른쪽 맞춤
@@ -75,11 +85,11 @@ Begin VB.Form frmSplash
       End
       Begin VB.Label lblWarning 
          BackStyle       =   0  '투명
-         Caption         =   "Copyright  (C) 2011 YJSoFT.All rights Reserved."
+         Caption         =   "Copyright  (C) 2010-2013 YJSoFT.All rights Reserved."
          Height          =   195
          Left            =   120
          TabIndex        =   2
-         Top             =   3660
+         Top             =   3720
          Width           =   6855
       End
       Begin VB.Label lblVersion 
@@ -203,12 +213,13 @@ Else
     Me.lblLastUpdated = "마지막 업데이트 날짜 : " & LAST_UPDATED '마지막 업데이트 날짜 표시
 End If
 If IsAboutbox Then
-lblAbout1.Visible = True
+'lblAbout1.Visible = True
 'Timer1.Enabled = False
 End If
     lblVersion.Caption = "버전 " & App.Major & "." & App.Minor & "." & App.Revision
     lblProductName.Caption = PROGRAM_NAME
 Me.lblUser.Caption = Username
+lblWinVer.Caption = fGetWindowVersion
 End Sub
 
 Private Sub Frame1_Click()
