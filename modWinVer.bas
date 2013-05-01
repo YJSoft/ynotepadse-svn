@@ -3,6 +3,7 @@ Attribute VB_Name = "modWinVer"
 '윈도우 이름, 버전 이름, 그리고 버전 번호를 구하는 함수 입니다.
 'MSDN을 참조해서 만들었습니다.
 '제작 : 리바이
+'수정 : YJSoft
 '일시 : 2011.01.22
 '***************************************************
  
@@ -275,6 +276,7 @@ Public Function fGetWindowVersion() As String
                     End If
             End Select
         Case 6:
+            IsAboveNT = True 'Bugfix:issue6
             iVersionName = GetProductInfo(tVersionInfo.dwMajorVersion, tVersionInfo.dwMinorVersion, 0, 0, iVersionName)
             
             Select Case iVersionName
@@ -344,6 +346,9 @@ Public Function fGetWindowVersion() As String
                     End If
                 Case 2:
                     sOSName = "Windows 8" & " " & sOSVersionName
+                    
+                Case 3:
+                    sOSName = "Windows 9" & " " & sOSVersionName
             End Select
     End Select
         
