@@ -146,6 +146,7 @@
         Me.mnuAddTool = New System.Windows.Forms.ToolStripMenuItem
         Me.mnuEncrypt = New System.Windows.Forms.ToolStripMenuItem
         Me.mnuDecrypt = New System.Windows.Forms.ToolStripMenuItem
+        Me.윈도우버전출력WToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         Me.fdghdfhdh = New System.Windows.Forms.ToolStripSeparator
         Me.mnuToolOption = New System.Windows.Forms.ToolStripMenuItem
         Me.mnuHelp = New System.Windows.Forms.ToolStripMenuItem
@@ -178,10 +179,12 @@
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
         Me.AxMcc1 = New AxMyConvenientControl.AxMcc
+        Me.AxGetWinVer1 = New AxprjGetWinVer.AxGetWinVer
         Me.MainMenu1.SuspendLayout()
         Me.tbTools.SuspendLayout()
         CType(Me.mnuMRU, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.AxMcc1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.AxGetWinVer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainMenu1
@@ -472,7 +475,7 @@
         '
         'mnuAddTool
         '
-        Me.mnuAddTool.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEncrypt, Me.mnuDecrypt})
+        Me.mnuAddTool.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEncrypt, Me.mnuDecrypt, Me.윈도우버전출력WToolStripMenuItem})
         Me.mnuAddTool.Name = "mnuAddTool"
         Me.mnuAddTool.Size = New System.Drawing.Size(187, 22)
         Me.mnuAddTool.Text = "추가 기능(&A)"
@@ -481,15 +484,21 @@
         '
         Me.mnuEncrypt.Enabled = False
         Me.mnuEncrypt.Name = "mnuEncrypt"
-        Me.mnuEncrypt.Size = New System.Drawing.Size(130, 22)
+        Me.mnuEncrypt.Size = New System.Drawing.Size(188, 22)
         Me.mnuEncrypt.Text = "암호화(&E)"
         '
         'mnuDecrypt
         '
         Me.mnuDecrypt.Enabled = False
         Me.mnuDecrypt.Name = "mnuDecrypt"
-        Me.mnuDecrypt.Size = New System.Drawing.Size(130, 22)
+        Me.mnuDecrypt.Size = New System.Drawing.Size(188, 22)
         Me.mnuDecrypt.Text = "복호화(&D)"
+        '
+        '윈도우버전출력WToolStripMenuItem
+        '
+        Me.윈도우버전출력WToolStripMenuItem.Name = "윈도우버전출력WToolStripMenuItem"
+        Me.윈도우버전출력WToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
+        Me.윈도우버전출력WToolStripMenuItem.Text = "윈도우 버전 출력(&W)"
         '
         'fdghdfhdh
         '
@@ -687,12 +696,22 @@
         Me.AxMcc1.Size = New System.Drawing.Size(32, 32)
         Me.AxMcc1.TabIndex = 4
         '
+        'AxGetWinVer1
+        '
+        Me.AxGetWinVer1.Enabled = True
+        Me.AxGetWinVer1.Location = New System.Drawing.Point(25, 182)
+        Me.AxGetWinVer1.Name = "AxGetWinVer1"
+        Me.AxGetWinVer1.OcxState = CType(resources.GetObject("AxGetWinVer1.OcxState"), System.Windows.Forms.AxHost.State)
+        Me.AxGetWinVer1.Size = New System.Drawing.Size(240, 44)
+        Me.AxGetWinVer1.TabIndex = 5
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(525, 437)
+        Me.Controls.Add(Me.AxGetWinVer1)
         Me.Controls.Add(Me.AxMcc1)
         Me.Controls.Add(Me.tbTools)
         Me.Controls.Add(Me.txtText)
@@ -710,6 +729,7 @@
         Me.tbTools.PerformLayout()
         CType(Me.mnuMRU, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.AxMcc1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.AxGetWinVer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -720,5 +740,7 @@
     Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
     Friend WithEvents AxMcc1 As AxMyConvenientControl.AxMcc
+    Friend WithEvents 윈도우버전출력WToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AxGetWinVer1 As AxprjGetWinVer.AxGetWinVer
 #End Region 
 End Class

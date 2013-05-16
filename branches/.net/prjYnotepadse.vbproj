@@ -95,6 +95,14 @@
       <WrapperTool>aximp</WrapperTool>
       <Isolated>False</Isolated>
     </COMReference>
+    <COMReference Include="AxprjGetWinVer">
+      <Guid>{BDE22654-9054-4820-A177-8D804B54B55C}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
     <COMReference Include="MSComCtl2">
       <Guid>{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}</Guid>
       <Lcid>0</Lcid>
@@ -105,6 +113,14 @@
     <COMReference Include="MyConvenientControl">
       <Guid>{3DFE7837-69AB-4367-B5DD-159A7EBDE1E6}</Guid>
       <VersionMajor>15</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="prjGetWinVer">
+      <Guid>{BDE22654-9054-4820-A177-8D804B54B55C}</Guid>
+      <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
