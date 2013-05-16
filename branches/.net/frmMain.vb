@@ -1079,4 +1079,12 @@ Err_Trans:
 		'UPGRADE_WARNING: Screen 속성 Screen.MousePointer에 새 동작이 있습니다. 자세한 내용은 다음을 참조하십시오. 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'
 		System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default
 	End Sub
+
+    Private Sub 윈도우버전출력WToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles 윈도우버전출력WToolStripMenuItem.Click
+        If txtText.Text = "" Then
+            txtText.Text = AxGetWinVer1.GetWindows
+            Exit Sub
+        End If
+        txtText.Text = txtText.Text & vbCrLf & AxGetWinVer1.GetWindows
+    End Sub
 End Class
