@@ -4,6 +4,7 @@ Begin VB.UserControl FileOpenCtl
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   4800
+   PropertyPages   =   "FileOpenCtl.ctx":0000
    ScaleHeight     =   3600
    ScaleWidth      =   4800
    Begin VB.TextBox txtBody 
@@ -12,7 +13,7 @@ Begin VB.UserControl FileOpenCtl
       MultiLine       =   -1  'True
       ScrollBars      =   3  '양방향
       TabIndex        =   0
-      Text            =   "FileOpenCtl.ctx":0000
+      Text            =   "FileOpenCtl.ctx":0012
       Top             =   600
       Width           =   2295
    End
@@ -22,10 +23,21 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+Attribute VB_Ext_KEY = "PropPageWizardRun" ,"Yes"
 '기본 속성 값:
+Const m_def_ErrNumber = 0
+Const m_def_ErrDesc = "오류가 없습니다."
+'Const m_def_ErrNumber = 0
+'Const m_def_ErrDesc = ""
+Const m_def_Dirty = 0
 Const m_def_FillColor = &H0&
 Const m_def_FileName = "0"
 '속성 변수:
+Dim m_ErrNumber As Integer
+Dim m_ErrDesc As String
+'Dim m_ErrNumber As Integer
+'Dim m_ErrDesc As String
+Dim m_Dirty As Boolean
 Dim m_FillColor As OLE_COLOR
 Dim m_FileName As String
 '이벤트 선언:
@@ -82,6 +94,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,Enabled
 Public Property Get Enabled() As Boolean
 Attribute Enabled.VB_Description = "사용자가 만든 이벤트에 대해 개체가 응답할 수 있는지의 여부를 결정하는 값을 반환하거나 설정합니다."
+Attribute Enabled.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     Enabled = txtBody.Enabled
 End Property
 
@@ -154,6 +167,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontBold
 Public Property Get FontBold() As Boolean
 Attribute FontBold.VB_Description = "굵게 글꼴 유형을 반환하거나 설정합니다."
+Attribute FontBold.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontBold = txtBody.FontBold
 End Property
 
@@ -166,6 +180,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontItalic
 Public Property Get FontItalic() As Boolean
 Attribute FontItalic.VB_Description = "기울임 글꼴 유형을 반환하거나 설정합니다."
+Attribute FontItalic.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontItalic = txtBody.FontItalic
 End Property
 
@@ -178,6 +193,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontName
 Public Property Get FontName() As String
 Attribute FontName.VB_Description = "주어진 단계의 각 행에 나타나는 글꼴의 이름을 지정합니다."
+Attribute FontName.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontName = txtBody.FontName
 End Property
 
@@ -190,6 +206,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontSize
 Public Property Get FontSize() As Single
 Attribute FontSize.VB_Description = "주어진 단계의 각 행에 나타나는 글꼴 크기를 포인트 단위로 지정합니다."
+Attribute FontSize.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontSize = txtBody.FontSize
 End Property
 
@@ -202,6 +219,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontStrikethru
 Public Property Get FontStrikethru() As Boolean
 Attribute FontStrikethru.VB_Description = "취소선 글꼴 유형을 반환하거나 설정합니다."
+Attribute FontStrikethru.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontStrikethru = txtBody.FontStrikethru
 End Property
 
@@ -214,6 +232,7 @@ End Property
 'MappingInfo=txtBody,txtBody,-1,FontUnderline
 Public Property Get FontUnderline() As Boolean
 Attribute FontUnderline.VB_Description = "밑줄 글꼴 유형을 반환하거나 설정합니다."
+Attribute FontUnderline.VB_ProcData.VB_Invoke_Property = "DefaultPage"
     FontUnderline = txtBody.FontUnderline
 End Property
 
@@ -224,16 +243,42 @@ End Property
 
 '경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
 'MemberInfo=0
-Public Function OpenFile() As Boolean
+Public Function OpenFile(strFileName As String) As Boolean
 Attribute OpenFile.VB_Description = "파일을 엽니다.(오류 발생시 False값이 반환됩니다)"
-
+On Error GoTo err_open
+m_FileName = strFileName
+    Dim FreeFileNum As Integer
+    FreeFileNum = FreeFile
+    Open strFileName For Input As #FreeFileNum
+    txtBody.Text = StrConv(InputB(LOF(FreeFileNum), FreeFileNum), vbUnicode)
+    OpenFile = True
+    PropertyChanged "Text"
+    Exit Function
+err_open:
+OpenFile = False
+m_ErrNumber = Err.Number
+m_ErrDesc = Err.Description
+Err.Clear
 End Function
 
 '경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
 'MemberInfo=0
-Public Function SaveFile() As Boolean
+Public Function SaveFile(strFileName As String) As Boolean
 Attribute SaveFile.VB_Description = "파일을 저장합니다.(오류 발생시 False값이 반환됩니다)"
-
+On Error GoTo err_save
+m_FileName = strFileName
+    Dim FreeFileNum As Integer
+    FreeFileNum = FreeFile
+    Open strFileName For Output As #FreeFileNum
+    Print #FreeFileNum, txtBody.Text
+    Close #FreeFileNum
+    SaveFile = True
+    Exit Function
+err_save:
+SaveFile = False
+m_ErrNumber = Err.Number
+m_ErrDesc = Err.Description
+Err.Clear
 End Function
 
 '경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
@@ -247,8 +292,7 @@ End Property
 Public Property Let FileName(ByVal New_FileName As String)
     If Ambient.UserMode = False Then Err.Raise 387
     If Ambient.UserMode Then Err.Raise 382
-    m_FileName = New_FileName
-    PropertyChanged "FileName"
+    Err.Raise 387
 End Property
 
 Private Sub txtBody_Change()
@@ -271,6 +315,11 @@ End Property
 Private Sub UserControl_InitProperties()
     m_FillColor = m_def_FillColor
     m_FileName = m_def_FileName
+    m_Dirty = m_def_Dirty
+'    m_ErrNumber = m_def_ErrNumber
+'    m_ErrDesc = m_def_ErrDesc
+    m_ErrNumber = m_def_ErrNumber
+    m_ErrDesc = m_def_ErrDesc
 End Sub
 
 '저장소에서 속성값을 로드합니다.
@@ -288,6 +337,11 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
     txtBody.FontUnderline = PropBag.ReadProperty("FontUnderline", 0)
     m_FileName = PropBag.ReadProperty("FileName", m_def_FileName)
     txtBody.Text = PropBag.ReadProperty("Text", "")
+    m_Dirty = PropBag.ReadProperty("Dirty", m_def_Dirty)
+'    m_ErrNumber = PropBag.ReadProperty("ErrNumber", m_def_ErrNumber)
+'    m_ErrDesc = PropBag.ReadProperty("ErrDesc", m_def_ErrDesc)
+    m_ErrNumber = PropBag.ReadProperty("ErrNumber", m_def_ErrNumber)
+    m_ErrDesc = PropBag.ReadProperty("ErrDesc", m_def_ErrDesc)
 End Sub
 
 '속성값을 저장소에 기록합니다.
@@ -305,5 +359,72 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     Call PropBag.WriteProperty("FontUnderline", txtBody.FontUnderline, 0)
     Call PropBag.WriteProperty("FileName", m_FileName, m_def_FileName)
     Call PropBag.WriteProperty("Text", txtBody.Text, "")
+    Call PropBag.WriteProperty("Dirty", m_Dirty, m_def_Dirty)
+'    Call PropBag.WriteProperty("ErrNumber", m_ErrNumber, m_def_ErrNumber)
+'    Call PropBag.WriteProperty("ErrDesc", m_ErrDesc, m_def_ErrDesc)
+    Call PropBag.WriteProperty("ErrNumber", m_ErrNumber, m_def_ErrNumber)
+    Call PropBag.WriteProperty("ErrDesc", m_ErrDesc, m_def_ErrDesc)
 End Sub
+
+'경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
+'MemberInfo=0,0,0,0
+Public Property Get Dirty() As Boolean
+Attribute Dirty.VB_Description = "열려진 파일에 변경 사항이 있는지 기록할 수 있습니다."
+    Dirty = m_Dirty
+End Property
+
+Public Property Let Dirty(ByVal New_Dirty As Boolean)
+    m_Dirty = New_Dirty
+    PropertyChanged "Dirty"
+End Property
+'
+''경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
+''MemberInfo=7,0,0,0
+'Public Property Get ErrNumber() As Integer
+'    ErrNumber = m_ErrNumber
+'End Property
+'
+'Public Property Let ErrNumber(ByVal New_ErrNumber As Integer)
+'    m_ErrNumber = New_ErrNumber
+'    PropertyChanged "ErrNumber"
+'End Property
+'
+''경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
+''MemberInfo=13,0,0,
+'Public Property Get ErrDesc() As String
+'    ErrDesc = m_ErrDesc
+'End Property
+'
+'Public Property Let ErrDesc(ByVal New_ErrDesc As String)
+'    m_ErrDesc = New_ErrDesc
+'    PropertyChanged "ErrDesc"
+'End Property
+'
+'경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
+'MemberInfo=7,1,2,0
+Public Property Get ErrNumber() As Integer
+Attribute ErrNumber.VB_Description = "오류 발생시 오류 번호를 반환합니다."
+Attribute ErrNumber.VB_MemberFlags = "400"
+    ErrNumber = m_ErrNumber
+End Property
+
+Public Property Let ErrNumber(ByVal New_ErrNumber As Integer)
+    If Ambient.UserMode = False Then Err.Raise 387
+    If Ambient.UserMode Then Err.Raise 382
+Err.Raise 387
+End Property
+
+'경고! 주석으로 되어 있는 다음 줄은 제거하거나 수정하지 마십시오!
+'MemberInfo=13,1,2,
+Public Property Get ErrDesc() As String
+Attribute ErrDesc.VB_Description = "오류 발생시 오류 설명을 반환합니다."
+Attribute ErrDesc.VB_MemberFlags = "400"
+    ErrDesc = m_ErrDesc
+End Property
+
+Public Property Let ErrDesc(ByVal New_ErrDesc As String)
+    If Ambient.UserMode = False Then Err.Raise 387
+    If Ambient.UserMode Then Err.Raise 382
+Err.Raise 387
+End Property
 
