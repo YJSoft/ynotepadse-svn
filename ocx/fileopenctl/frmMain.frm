@@ -27,7 +27,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Form_Load()
-FileOpenCtl1.Text = "YJSoft Good!"
+If Not FileOpenCtl1.openFile("C:\aaa1.txt") Then MsgBox FileOpenCtl1.ErrNumber & " / " & FileOpenCtl1.ErrDesc
 End Sub
 
 Private Sub Form_Resize()
