@@ -5,15 +5,15 @@ Object = "{3DFE7837-69AB-4367-B5DD-159A7EBDE1E6}#15.0#0"; "Mcc.ocx"
 Begin VB.Form frmProgressBar 
    BorderStyle     =   1  '단일 고정
    Caption         =   "Y's Notepad SE Updater"
-   ClientHeight    =   4545
+   ClientHeight    =   4530
    ClientLeft      =   45
    ClientTop       =   435
-   ClientWidth     =   5715
+   ClientWidth     =   5745
    Icon            =   "frmProgressBar.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
-   ScaleHeight     =   4545
-   ScaleWidth      =   5715
+   ScaleHeight     =   4530
+   ScaleWidth      =   5745
    StartUpPosition =   2  '화면 가운데
    Begin RichTextLib.RichTextBox updinfoctl 
       Height          =   2415
@@ -24,6 +24,7 @@ Begin VB.Form frmProgressBar
       _ExtentX        =   9763
       _ExtentY        =   4260
       _Version        =   393217
+      Enabled         =   -1  'True
       ScrollBars      =   2
       TextRTF         =   $"frmProgressBar.frx":6852
    End
@@ -37,7 +38,6 @@ Begin VB.Form frmProgressBar
       _ExtentX        =   450
       _ExtentY        =   450
       _Version        =   393217
-      Enabled         =   -1  'True
       TextRTF         =   $"frmProgressBar.frx":68EF
    End
    Begin VB.TextBox txtLocal 
@@ -212,7 +212,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 Option Base 0
 
@@ -260,9 +259,9 @@ txtLocal.Text = AppPath & "\Version.txt"
 Command1_Click
 Me.RichTextBox1.FileName = AppPath & "\Version.txt"
 txtURL.Text = UpdateSite & "UPDINFO.txt"
-txtLocal.Text = AppPath & "UPDINFO.txt"
+txtLocal.Text = AppPath & "\UPDINFO.txt"
 Command1_Click
-updinfoctl.FileName = AppPath & "UPDINFO.txt"
+updinfoctl.FileName = AppPath & "\UPDINFO.txt"
 'Text1.Text = updinfoctl.Text
 If Not Me.RichTextBox1.Text = GetSetting("YNOTEPADSE", "Program", "Date", "2000-01-01") Then '버전이 다르다
 ForceUpDate:
@@ -388,8 +387,8 @@ End Sub
 
 Private Sub Form_Load()
     '업데이트 사이트 정보를 불러온다
-    Me.RichTextBox1.FileName = AppPath & "\UpdateSite.ini"
-    UpdateSite = Me.RichTextBox1.Text
+    'Me.RichTextBox1.FileName = AppPath & "\UpdateSite.ini"
+    'UpdateSite = Me.RichTextBox1.Text
     Me.RichTextBox1.Text = ""
     Me.RichTextBox1.FileName = ""
     '업데이터 자체 업데이트 조사
@@ -397,7 +396,7 @@ Private Sub Form_Load()
     txtLocal.Text = AppPath & "\UDVersion.txt"
     Command1_Click
     Me.RichTextBox1.FileName = AppPath & "\UDVersion.txt"
-    If Not Me.RichTextBox1.Text = "2013-04-03" Then '버전이 다르다(업데이트 필요)
+    If Not Me.RichTextBox1.Text = "2013-09-17" Then '버전이 다르다(업데이트 필요)
         MsgBox "새로운 버전이 있습니다. 새 버전을 받아 옵니다...", vbInformation, "업데이트 확인됨"
         txtURL.Text = UpdateSite & "UPDATER_" & Me.RichTextBox1.Text & ".exe"
         txtLocal.Text = AppPath & "\UPDATER_" & Me.RichTextBox1.Text & ".exe"
@@ -421,13 +420,6 @@ Private Sub Form_Load()
         End
     End If
     
-    'If App.LogMode = 0 Then
-    '    If MsgBox("이 예제에서는 동적인 제어를 위해 클래스 모듈의 함수 포인터를 변경합니다." & vbCrLf & vbCrLf & _
-    '              "Visual Basic IDE 모드에서 실행한 경우에는 다소 불안정할 수 있습니다." & vbCrLf & vbCrLf & _
-    '              "계속 실행하시겠습니까?", vbExclamation Or vbYesNo, "경고") = vbNo Then
-    '        End
-    '    End If
-    'End If
     
     ' 작업 관리자등에서 보여질 이름
     App.Title = Caption

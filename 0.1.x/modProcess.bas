@@ -1,5 +1,5 @@
 Attribute VB_Name = "modProcess"
-Public UpdateSite As String
+Public Const UpdateSite = "http://yjsoft.dominohosting.kr/ynotepadse/"
 Private Declare Function CreateToolhelp32Snapshot Lib "kernel32" (ByVal lFlags As Long, ByVal lProcessID As Long) As Long
 Private Declare Function Process32First Lib "kernel32" (ByVal hSnapShot As Long, uProcess As PROCESSENTRY32) As Long
 Private Declare Function Process32Next Lib "kernel32" (ByVal hSnapShot As Long, uProcess As PROCESSENTRY32) As Long
