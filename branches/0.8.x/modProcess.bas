@@ -2,7 +2,7 @@ Attribute VB_Name = "modProcess"
 '---------------------------------------------------------------------------------------
 ' Module    : modProcess
 ' DateTime  : 2013-04-03 13:36
-' Author    : Administrator
+' Author    : YJSoft
 ' Purpose   :
 '---------------------------------------------------------------------------------------
 Public UpdateSite As String

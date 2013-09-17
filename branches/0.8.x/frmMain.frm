@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.ocx"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
@@ -464,14 +464,6 @@ With CD1
     .Color = GetSetting(PROGRAM_KEY, "RTF", "FontColor", &H0&)
 End With
 '--레지에서 설정 불러오기 끝--
-'로그 저장 방식 Shell Echo로 바꿔서 필요없음
-'Me.logsave.Text = ""
-'If Dir(AppPath & "\log.dat") = "" Then '로그 파일이 있는지 확인
-'    Me.logsave.SaveFile AppPath & "\log.dat", rtfText '없다면 만들어 준다
-'Else
-'    Me.logsave.FileName = AppPath & "\log.dat" '있다면 불러온다
-'    Debug.Print AppPath
-'End If
 Mklog "프로그램 실행 - V." & App.Major & "." & App.Minor & "." & App.Revision & _
     " Last Updated:" & LAST_UPDATED '로그 남김
 FileName_Dir = "제목 없음" '빈 파일

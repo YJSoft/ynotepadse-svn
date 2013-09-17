@@ -85,7 +85,7 @@ Begin VB.Form frmSplash
       End
       Begin VB.Label lblWarning 
          BackStyle       =   0  '투명
-         Caption         =   "Copyright  (C) 2010-2013 YJSoFT.All rights Reserved."
+         Caption         =   "Copyright  (C) 2010-2013 YJSoft.All rights Reserved."
          Height          =   195
          Left            =   120
          TabIndex        =   2
@@ -164,7 +164,7 @@ Begin VB.Form frmSplash
       Begin VB.Label lblCompanyProduct 
          AutoSize        =   -1  'True
          BackStyle       =   0  '투명
-         Caption         =   "YJSoFT"
+         Caption         =   "YJSoft"
          BeginProperty Font 
             Name            =   "굴림"
             Size            =   18
@@ -178,7 +178,7 @@ Begin VB.Form frmSplash
          Left            =   2040
          TabIndex        =   5
          Top             =   705
-         Width           =   1305
+         Width           =   1140
       End
    End
 End
